@@ -17,6 +17,7 @@ const newEntry = () => ({
   alpn: [],
   pinnedPeerCertSha256: [],
   echConfigList: '',
+  allowInsecure: false,
 });
 
 function Field({ label, children }: { label: ReactNode; children: ReactNode }) {
@@ -179,6 +180,15 @@ export default function ExternalProxyForm({
                                           title={t('pages.inbounds.form.generateRandomPin')}
                                         />
                                       </Space.Compact>
+                                    </Field>
+                                    <Field label={t('pages.inbounds.form.allowInsecure')}>
+                                      <Form.Item
+                                        name={[field.name, 'allowInsecure']}
+                                        valuePropName="checked"
+                                        noStyle
+                                      >
+                                        <Switch />
+                                      </Form.Item>
                                     </Field>
                                   </div>
                                 );
