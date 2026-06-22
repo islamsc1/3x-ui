@@ -57,6 +57,7 @@ export const TlsClientSettingsSchema = z.object({
   fingerprint: TlsFingerprintSchema.default('chrome'),
   echConfigList: z.string().default(''),
   pinnedPeerCertSha256: z.array(z.string()).default([]),
+  allowInsecure: z.boolean().default(false),
 });
 export type TlsClientSettings = z.infer<typeof TlsClientSettingsSchema>;
 

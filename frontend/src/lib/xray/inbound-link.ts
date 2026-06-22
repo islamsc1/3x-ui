@@ -145,6 +145,9 @@ function applyExternalProxyTLSObj(
   const pins = externalProxyPins(externalProxy.pinnedPeerCertSha256);
   if (pins.length > 0) obj.pcs = pins;
   if (externalProxy.echConfigList && externalProxy.echConfigList.length > 0) obj.ech = externalProxy.echConfigList;
+  if (externalProxy.allowInsecure) {
+    obj.allowInsecure = externalProxy.allowInsecure;
+  }
 }
 
 export interface GenVmessLinkInput {
@@ -244,6 +247,9 @@ export function genVmessLink(input: GenVmessLinkInput): string {
     if (tlsSettings.settings.pinnedPeerCertSha256.length > 0) {
       obj.pcs = tlsSettings.settings.pinnedPeerCertSha256.join(',');
     }
+    if (tlsSettings.settings.allowInsecure) {
+      obj.allowInsecure = tlsSettings.settings.allowInsecure;
+    }
   }
 
   applyExternalProxyTLSObj(externalProxy, obj, tls);
@@ -289,6 +295,9 @@ function applyExternalProxyTLSParams(
   const pins = externalProxyPins(externalProxy.pinnedPeerCertSha256);
   if (pins.length > 0) params.set('pcs', pins);
   if (externalProxy.echConfigList && externalProxy.echConfigList.length > 0) params.set('ech', externalProxy.echConfigList);
+  if (externalProxy.allowInsecure) {
+    params.set('allowInsecure', '1');
+  }
 }
 
 export interface GenVlessLinkInput {
@@ -374,6 +383,9 @@ export function genVlessLink(input: GenVlessLinkInput): string {
       if (tls.settings.pinnedPeerCertSha256.length > 0) {
         params.set('pcs', tls.settings.pinnedPeerCertSha256.join(','));
       }
+      if (tls.settings.allowInsecure) {
+        params.set('allowInsecure', '1');
+      }
       if (stream.network === 'tcp' && flow.length > 0) params.set('flow', flow);
     }
     applyExternalProxyTLSParams(externalProxy, params, security);
@@ -455,6 +467,9 @@ function writeTlsParams(stream: NonNullable<Inbound['streamSettings']>, params: 
   if (tls.serverName.length > 0) params.set('sni', tls.serverName);
   if (tls.settings.pinnedPeerCertSha256.length > 0) {
     params.set('pcs', tls.settings.pinnedPeerCertSha256.join(','));
+  }
+  if (tls.settings.allowInsecure) {
+    params.set('allowInsecure', '1');
   }
 }
 
@@ -655,6 +670,9 @@ export function genHysteriaLink(input: GenHysteriaLinkInput): string {
   if (tls.serverName.length > 0) params.set('sni', tls.serverName);
   if (tls.settings.pinnedPeerCertSha256.length > 0) {
     params.set('pinSHA256', tls.settings.pinnedPeerCertSha256.map(hysteriaPinHex).join(','));
+  }
+  if (tls.settings.allowInsecure) {
+    params.set('allowInsecure', '1');
   }
   // An external-proxy entry can pin a different endpoint's certificate.
   // Hysteria carries it as hex `pinSHA256` (not the `pcs` other protocols

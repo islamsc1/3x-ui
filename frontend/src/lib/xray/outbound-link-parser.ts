@@ -124,6 +124,7 @@ function buildStream(network: string, security: string): Raw {
     stream.tlsSettings = {
       serverName: '', alpn: [], fingerprint: '',
       echConfigList: '', verifyPeerCertByName: '', pinnedPeerCertSha256: '',
+      allowInsecure: false,
     };
   } else if (security === 'reality') {
     stream.realitySettings = {
@@ -205,6 +206,7 @@ function applySecurityParams(stream: Raw, params: URLSearchParams): void {
     if (alpn) tls.alpn = alpn.split(',');
     tls.echConfigList = params.get('ech') ?? '';
     tls.pinnedPeerCertSha256 = params.get('pcs') ?? '';
+    tls.allowInsecure = params.get('allowInsecure') === '1';
   } else if (stream.security === 'reality') {
     const reality = stream.realitySettings as Raw;
     reality.serverName = params.get('sni') ?? '';
@@ -264,6 +266,7 @@ export function parseVmessLink(link: string): Raw | null {
       tls.serverName = json.sni ?? '';
       tls.fingerprint = json.fp ?? '';
       if (json.alpn) tls.alpn = (json.alpn as string).split(',');
+      tls.allowInsecure = !!json.allowInsecure;
     }
 
     const port = Number(json.port) || 443;
@@ -420,6 +423,7 @@ export function parseHysteria2Link(link: string): Raw | null {
       echConfigList: params.get('ech') ?? '',
       verifyPeerCertByName: '',
       pinnedPeerCertSha256: params.get('pinSHA256') ?? '',
+      allowInsecure: params.get('allowInsecure') === '1',
     },
   };
   applyFinalMaskParam(stream, params);

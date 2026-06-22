@@ -303,6 +303,14 @@ export default function TlsForm({
           />
         </Space.Compact>
       </Form.Item>
+      <Form.Item
+        name={['streamSettings', 'tlsSettings', 'settings', 'allowInsecure']}
+        label={t('pages.inbounds.form.allowInsecure')}
+        tooltip={t('pages.inbounds.form.allowInsecureTip')}
+        valuePropName="checked"
+      >
+        <Switch />
+      </Form.Item>
       <Form.Item label=" ">
         <Space>
           <Button type="primary" loading={saving} onClick={getNewEchCert}>

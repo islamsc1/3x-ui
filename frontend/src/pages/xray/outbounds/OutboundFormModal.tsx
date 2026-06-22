@@ -220,6 +220,7 @@ export default function OutboundFormModal({
         echConfigList: '',
         verifyPeerCertByName: '',
         pinnedPeerCertSha256: '',
+        allowInsecure: false,
       };
     } else if (next === 'reality') {
       cleaned.realitySettings = {

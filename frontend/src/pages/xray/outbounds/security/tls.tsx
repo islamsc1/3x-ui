@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Switch } from 'antd';
 
 import { ALPN_OPTIONS, UTLS_OPTIONS } from '../outbound-form-constants';
 
@@ -46,6 +46,13 @@ export default function TlsForm() {
         name={['streamSettings', 'tlsSettings', 'pinnedPeerCertSha256']}
       >
         <Input placeholder="base64 SHA256" />
+      </Form.Item>
+      <Form.Item
+        label={t('pages.inbounds.form.allowInsecure')}
+        name={['streamSettings', 'tlsSettings', 'allowInsecure']}
+        valuePropName="checked"
+      >
+        <Switch />
       </Form.Item>
     </>
   );

@@ -579,6 +579,8 @@
         "pinnedPeerCertSha256": "Pinned Peer Cert SHA-256",
         "pinnedPeerCertSha256Tip": "SHA-256 hash(es) of the peer certificate as a hex string (e.g. e8e2d3…), comma-separated. Panel-only — not written to the server's xray config, but included in share links so clients can pin the certificate.",
         "pinnedPeerCertSha256Placeholder": "hex hash(es), comma-separated",
+        "allowInsecure": "Allow Insecure",
+        "allowInsecureTip": "Skip TLS certificate verification (allowInsecure / skip-cert-verify). WARNING: This disables peer certificate verification, leaving connections open to Man-in-the-Middle (MitM) attacks. Use with caution.",
         "generateRandomPin": "Generate random hash",
         "getNewEchCert": "Get New ECH Cert",
         "show": "Show",
