@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Input, Select } from 'antd';
+import { Input, Select, Switch } from 'antd';
 
 import { FormField } from '@/components/form/rhf';
 
@@ -42,6 +42,13 @@ export default function TlsForm() {
         name={['streamSettings', 'tlsSettings', 'verifyPeerCertByName']}
       >
         <Input placeholder="cloudflare-dns.com" />
+      </FormField>
+      <FormField
+        label={t('pages.inbounds.form.allowInsecure')}
+        name={['streamSettings', 'tlsSettings', 'allowInsecure']}
+        valueProp="checked"
+      >
+        <Switch />
       </FormField>
       <FormField
         label={t('pages.xray.outboundForm.pinnedSha256')}

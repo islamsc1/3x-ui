@@ -156,6 +156,9 @@ function applyExternalProxyTLSObj(
   const sni = externalProxy.sni && externalProxy.sni.length > 0 ? externalProxy.sni : externalProxy.dest;
   if (sni && sni.length > 0) obj.sni = sni;
   if (externalProxy.fingerprint && externalProxy.fingerprint.length > 0) obj.fp = externalProxy.fingerprint;
+  if (externalProxy.allowInsecure) {
+    obj.allowInsecure = externalProxy.allowInsecure;
+  }
   const alpn = externalProxyAlpn(externalProxy.alpn);
   if (alpn.length > 0) obj.alpn = alpn;
   const pins = externalProxyPins(externalProxy.pinnedPeerCertSha256);
@@ -258,6 +261,9 @@ export function genVmessLink(input: GenVmessLinkInput): string {
     const tlsSettings = stream.tlsSettings;
     if (tlsSettings.serverName.length > 0) obj.sni = tlsSettings.serverName;
     if (tlsSettings.settings.fingerprint.length > 0) obj.fp = tlsSettings.settings.fingerprint;
+    if (tlsSettings.settings.allowInsecure) {
+      obj.allowInsecure = tlsSettings.settings.allowInsecure;
+    }
     if (tlsSettings.alpn.length > 0) obj.alpn = tlsSettings.alpn.join(',');
     if (tlsSettings.settings.echConfigList.length > 0) obj.ech = tlsSettings.settings.echConfigList;
     if (tlsSettings.settings.verifyPeerCertByName.length > 0) {
@@ -306,6 +312,9 @@ function applyExternalProxyTLSParams(
   const sni = externalProxy.sni && externalProxy.sni.length > 0 ? externalProxy.sni : externalProxy.dest;
   if (sni && sni.length > 0) params.set('sni', sni);
   if (externalProxy.fingerprint && externalProxy.fingerprint.length > 0) params.set('fp', externalProxy.fingerprint);
+  if (externalProxy.allowInsecure) {
+    params.set('allowInsecure', '1');
+  }
   const alpn = externalProxyAlpn(externalProxy.alpn);
   if (alpn.length > 0) params.set('alpn', alpn);
   const pins = externalProxyPins(externalProxy.pinnedPeerCertSha256);
@@ -502,6 +511,9 @@ function writeNetworkParams(stream: NonNullable<Inbound['streamSettings']>, para
 function writeTlsParams(stream: NonNullable<Inbound['streamSettings']>, params: URLSearchParams): void {
   if (stream.security !== 'tls') return;
   const tls = stream.tlsSettings;
+  if (tls.settings.allowInsecure) {
+    params.set('allowInsecure', '1');
+  }
   params.set('fp', tls.settings.fingerprint);
   params.set('alpn', tls.alpn.join(','));
   if (tls.settings.echConfigList.length > 0) params.set('ech', tls.settings.echConfigList);

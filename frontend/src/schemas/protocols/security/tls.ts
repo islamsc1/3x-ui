@@ -56,6 +56,7 @@ export const TlsCertSchema = z.union([TlsCertFileSchema, TlsCertInlineSchema]);
 export type TlsCert = z.infer<typeof TlsCertSchema>;
 
 export const TlsClientSettingsSchema = z.object({
+  allowInsecure: z.boolean().default(false),
   fingerprint: TlsFingerprintSchema.default('chrome'),
   echConfigList: z.string().default(''),
   pinnedPeerCertSha256: z.array(z.string()).default([]),

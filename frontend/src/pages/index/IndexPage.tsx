@@ -34,7 +34,7 @@ import {
   DatabaseOutlined,
   ForkOutlined,
   CopyOutlined,
-  TelegramFilled,
+  SendOutlined,
 } from '@ant-design/icons';
 
 import { HttpUtil, SizeFormatter, TimeFormatter, ClipboardManager, FileManager } from '@/utils';
@@ -246,7 +246,7 @@ export default function IndexPage() {
                       hoverable
                       actions={[
                         <Space className="action" key="tg" role="button" tabIndex={0} aria-label="@XrayUI" onClick={openTelegram} onKeyDown={activateOnKey(openTelegram)}>
-                          <TelegramFilled className="tg-icon" aria-hidden="true" />
+                          <SendOutlined className="tg-icon" aria-hidden="true" />
                           {!isMobile && <span>@XrayUI</span>}
                         </Space>,
                         <Space
