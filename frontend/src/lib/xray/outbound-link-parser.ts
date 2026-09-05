@@ -170,6 +170,7 @@ function buildStream(network: string, security: string): Raw {
   }
   if (security === 'tls') {
     stream.tlsSettings = {
+      allowInsecure: false,
       serverName: '',
       alpn: [],
       fingerprint: '',
@@ -372,6 +373,7 @@ function applySecurityParams(stream: Raw, params: URLSearchParams): void {
     if (alpn) tls.alpn = alpn.split(',');
     tls.echConfigList = params.get('ech') ?? '';
     tls.verifyPeerCertByName = params.get('vcn') ?? '';
+    tls.allowInsecure = params.get('allowInsecure') === '1';
     tls.pinnedPeerCertSha256 = params.get('pcs') ?? '';
   } else if (stream.security === 'reality') {
     const reality = stream.realitySettings as Raw;
@@ -615,6 +617,7 @@ export function parseHysteria2Link(link: string): Raw | null {
       fingerprint: params.get('fp') ?? '',
       echConfigList: params.get('ech') ?? '',
       verifyPeerCertByName: params.get('vcn') ?? '',
+      allowInsecure: params.get('allowInsecure') === '1',
       pinnedPeerCertSha256: params.get('pinSHA256') ?? '',
     },
   };

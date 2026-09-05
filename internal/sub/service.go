@@ -1489,6 +1489,11 @@ func applyShareTLSParams(stream map[string]any, params map[string]string) {
 		if fpValue, ok := searchKey(tlsSettings, "fingerprint"); ok {
 			params["fp"], _ = fpValue.(string)
 		}
+		if insecure, ok := searchKey(tlsSettings, "allowInsecure"); ok {
+			if b, _ := insecure.(bool); b {
+				params["allowInsecure"] = "1"
+			}
+		}
 		if echValue, ok := searchKey(tlsSettings, "echConfigList"); ok {
 			if ech, _ := echValue.(string); ech != "" {
 				params["ech"] = ech
@@ -1523,6 +1528,11 @@ func applyVmessTLSParams(stream map[string]any, obj map[string]any) {
 	if tlsSetting != nil {
 		if fpValue, ok := searchKey(tlsSettings, "fingerprint"); ok {
 			obj["fp"], _ = fpValue.(string)
+		}
+		if insecure, ok := searchKey(tlsSettings, "allowInsecure"); ok {
+			if b, _ := insecure.(bool); b {
+				obj["allowInsecure"] = b
+			}
 		}
 		if echValue, ok := searchKey(tlsSettings, "echConfigList"); ok {
 			if ech, _ := echValue.(string); ech != "" {
@@ -1694,6 +1704,9 @@ func applyExternalProxyTLSObj(ep map[string]any, obj map[string]any, security st
 	if fp, ok := ep["fingerprint"].(string); ok && fp != "" {
 		obj["fp"] = fp
 	}
+	if insecure, ok := ep["allowInsecure"].(bool); ok && insecure {
+		obj["allowInsecure"] = insecure
+	}
 	if alpn, ok := externalProxyALPN(ep["alpn"]); ok {
 		obj["alpn"] = alpn
 	}
@@ -1717,6 +1730,9 @@ func applyExternalProxyTLSParams(ep map[string]any, params map[string]string, se
 	}
 	if fp, ok := ep["fingerprint"].(string); ok && fp != "" {
 		params["fp"] = fp
+	}
+	if insecure, ok := ep["allowInsecure"].(bool); ok && insecure {
+		params["allowInsecure"] = "1"
 	}
 	if alpn, ok := externalProxyALPN(ep["alpn"]); ok {
 		params["alpn"] = alpn

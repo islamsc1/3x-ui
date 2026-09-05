@@ -193,6 +193,7 @@ function dropZeroNumbers(obj: Record<string, unknown>, keys: readonly string[]):
 function normalizeTlsForWire(raw: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...raw };
   if (out.fingerprint === '') delete out.fingerprint;
+  dropFalseFlags(out, ['allowInsecure']);
 
   // Empty server-side tuning fields mean "use xray-core's default" — never emit them.
   if (Array.isArray(out.curvePreferences) && out.curvePreferences.length === 0) {
@@ -212,6 +213,7 @@ function normalizeTlsForWire(raw: Record<string, unknown>): Record<string, unkno
   if (isRecord(settings)) {
     const settingsOut: Record<string, unknown> = { ...settings };
     if (settingsOut.fingerprint === '') delete settingsOut.fingerprint;
+    dropFalseFlags(settingsOut, ['allowInsecure']);
     out.settings = settingsOut;
   }
 

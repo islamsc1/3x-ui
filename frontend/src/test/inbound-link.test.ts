@@ -893,6 +893,162 @@ describe('external proxy pinned cert (pcs)', () => {
   });
 });
 
+describe('allowInsecure TLS toggle emission', () => {
+  function parseWithTlsAllowInsecure(
+    raw: Record<string, unknown>,
+    allowInsecure: boolean | undefined,
+  ) {
+    const stream = (raw.streamSettings ?? {}) as Record<string, unknown>;
+    const tls = (stream.tlsSettings ?? {}) as Record<string, unknown>;
+    const tlsClient = { ...((tls.settings ?? {}) as Record<string, unknown>) };
+    if (allowInsecure === undefined) {
+      delete tlsClient.allowInsecure;
+    } else {
+      tlsClient.allowInsecure = allowInsecure;
+    }
+    return InboundSchema.parse({
+      ...raw,
+      streamSettings: {
+        ...stream,
+        security: 'tls',
+        tlsSettings: { ...tls, settings: tlsClient },
+      },
+    });
+  }
+
+  function rawFor(protocol: string, name: string): Record<string, unknown> {
+    const found = fixturesForProtocol(protocol).find(([fixtureName]) => fixtureName === name);
+    if (!found) throw new Error(`fixture ${name} not found for ${protocol}`);
+    return found[1];
+  }
+
+  const clientOf = (raw: Record<string, unknown>) =>
+    (raw as { settings: { clients: Array<Record<string, unknown>> } }).settings.clients[0];
+
+  describe('genVlessLink', () => {
+    const raw = rawFor('vless', 'vless-ws-tls');
+    const clientId = (clientOf(raw) as { id: string }).id;
+
+    it('emits allowInsecure=1 when the TLS toggle is on', () => {
+      const link = genVlessLink({
+        inbound: parseWithTlsAllowInsecure(raw, true),
+        address: 'example.test',
+        port: 443,
+        clientId,
+      });
+      expect(new URL(link).searchParams.get('allowInsecure')).toBe('1');
+    });
+
+    it('omits allowInsecure when the TLS toggle is off', () => {
+      const link = genVlessLink({
+        inbound: parseWithTlsAllowInsecure(raw, false),
+        address: 'example.test',
+        port: 443,
+        clientId,
+      });
+      expect(new URL(link).searchParams.has('allowInsecure')).toBe(false);
+    });
+
+    it('omits allowInsecure when the flag is absent', () => {
+      const link = genVlessLink({
+        inbound: parseWithTlsAllowInsecure(raw, undefined),
+        address: 'example.test',
+        port: 443,
+        clientId,
+      });
+      expect(new URL(link).searchParams.has('allowInsecure')).toBe(false);
+    });
+  });
+
+  describe('genTrojanLink', () => {
+    const raw = rawFor('trojan', 'trojan-ws-tls');
+    const clientPassword = (clientOf(raw) as { password: string }).password;
+
+    it('emits allowInsecure=1 when the TLS toggle is on', () => {
+      const link = genTrojanLink({
+        inbound: parseWithTlsAllowInsecure(raw, true),
+        address: 'example.test',
+        port: 443,
+        clientPassword,
+      });
+      expect(new URL(link).searchParams.get('allowInsecure')).toBe('1');
+    });
+
+    it('omits allowInsecure when the TLS toggle is off', () => {
+      const link = genTrojanLink({
+        inbound: parseWithTlsAllowInsecure(raw, false),
+        address: 'example.test',
+        port: 443,
+        clientPassword,
+      });
+      expect(new URL(link).searchParams.has('allowInsecure')).toBe(false);
+    });
+  });
+
+  describe('genShadowsocksLink', () => {
+    const raw = rawFor('shadowsocks', 'shadowsocks-tcp-2022');
+    const clientPassword = (clientOf(raw) as { password: string }).password ?? '';
+
+    it('emits allowInsecure=1 when the TLS toggle is on', () => {
+      const link = genShadowsocksLink({
+        inbound: parseWithTlsAllowInsecure(raw, true),
+        address: 'example.test',
+        port: 8388,
+        clientPassword,
+      });
+      expect(new URL(link).searchParams.get('allowInsecure')).toBe('1');
+    });
+
+    it('omits allowInsecure when the TLS toggle is off', () => {
+      const link = genShadowsocksLink({
+        inbound: parseWithTlsAllowInsecure(raw, false),
+        address: 'example.test',
+        port: 8388,
+        clientPassword,
+      });
+      expect(new URL(link).searchParams.has('allowInsecure')).toBe(false);
+    });
+  });
+
+  describe('genVmessLink (obj payload)', () => {
+    const raw = rawFor('vmess', 'vmess-tcp-tls');
+    const clientId = (clientOf(raw) as { id: string }).id;
+    const security = (clientOf(raw) as { security?: string }).security;
+
+    function decodePayload(link: string): Record<string, unknown> {
+      return JSON.parse(atob(link.slice('vmess://'.length)));
+    }
+
+    it('emits allowInsecure: true when the TLS toggle is on', () => {
+      const link = genVmessLink({
+        inbound: parseWithTlsAllowInsecure(raw, true),
+        address: 'example.test',
+        port: 8443,
+        forceTls: 'same',
+        remark: 'ai-test',
+        clientId,
+        security: security as never,
+        externalProxy: null,
+      });
+      expect(decodePayload(link).allowInsecure).toBe(true);
+    });
+
+    it('omits allowInsecure when the TLS toggle is off', () => {
+      const link = genVmessLink({
+        inbound: parseWithTlsAllowInsecure(raw, false),
+        address: 'example.test',
+        port: 8443,
+        forceTls: 'same',
+        remark: 'ai-test',
+        clientId,
+        security: security as never,
+        externalProxy: null,
+      });
+      expect(decodePayload(link).allowInsecure).toBeUndefined();
+    });
+  });
+});
+
 // #5322: the panel copy-link must carry XTLS Vision `flow` for VLESS+XHTTP
 // when VLESS encryption (vlessenc) is on, matching the form's flow display
 // and the backend subscription. Gating is via canEnableTlsFlow.

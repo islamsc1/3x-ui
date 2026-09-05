@@ -216,6 +216,7 @@ export default function OutboundFormModal({
         fingerprint: '',
         echConfigList: '',
         verifyPeerCertByName: '',
+        allowInsecure: false,
         pinnedPeerCertSha256: '',
       };
     } else if (next === 'reality') {
