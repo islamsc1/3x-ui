@@ -41,7 +41,7 @@ type PanelUpdateInfo struct {
 }
 
 const (
-	panelUpdaterURL      = "https://raw.githubusercontent.com/MHSanaei/3x-ui/main/update.sh"
+	panelUpdaterURL      = "https://raw.githubusercontent.com/islamsc1/3x-ui/with-allow-insecure/update.sh"
 	maxPanelUpdaterBytes = 2 << 20
 	// devReleaseTag is the fixed-tag rolling pre-release the CI force-moves to the
 	// newest main commit; the dev update channel installs from it.
@@ -431,9 +431,9 @@ func fetchLatestPanelVersion() (string, error) {
 // fetchPanelRelease fetches a release from GitHub. An empty tag resolves the
 // latest stable release; a non-empty tag (e.g. dev-latest) resolves that tag.
 func fetchPanelRelease(tag string) (*service.Release, error) {
-	url := "https://api.github.com/repos/MHSanaei/3x-ui/releases/latest"
+	url := "https://api.github.com/repos/islamsc1/3x-ui/releases/latest"
 	if tag != "" {
-		url = "https://api.github.com/repos/MHSanaei/3x-ui/releases/tags/" + tag
+		url = "https://api.github.com/repos/islamsc1/3x-ui/releases/tags/" + tag
 	}
 	client := (&service.SettingService{}).NewProxiedHTTPClient(10 * time.Second)
 	req, reqErr := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
@@ -522,10 +522,18 @@ func resolveUpdateFolders() (string, string) {
 	return mainFolder, serviceFolder
 }
 
+const forkReleaseTagSuffix = "-allowinsecure"
+
+func normalizeVersionTag(versionStr string) string {
+	return strings.TrimSuffix(version.Normalize(versionStr), forkReleaseTagSuffix)
+}
+
 func isNewerVersion(latest string, current string) bool {
+	latest = normalizeVersionTag(latest)
+	current = normalizeVersionTag(current)
 	cmp, ok := version.Compare(latest, current)
 	if !ok {
-		return version.Normalize(latest) != version.Normalize(current)
+		return latest != current
 	}
 	return cmp > 0
 }

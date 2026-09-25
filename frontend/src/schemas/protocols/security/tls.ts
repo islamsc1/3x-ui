@@ -79,6 +79,7 @@ export function tlsCertUsesFiles(cert: {
 }
 
 export const TlsClientSettingsSchema = z.object({
+  allowInsecure: z.boolean().default(false),
   // '' = None. Hysteria rejects uTLS fingerprints, and a chrome default
   // silently flipped the form's None back to chrome on every save.
   fingerprint: TlsFingerprintSchema.default(''),
@@ -112,6 +113,7 @@ export const TlsStreamSettingsSchema = z.object({
   masterKeyLog: z.string().optional(),
   echSockopt: SockoptStreamSettingsSchema.optional(),
   settings: TlsClientSettingsSchema.default({
+    allowInsecure: false,
     fingerprint: '',
     echConfigList: '',
     pinnedPeerCertSha256: [],

@@ -787,6 +787,9 @@ func (s *SubJsonService) tlsData(tData map[string]any) map[string]any {
 	if cs, ok := tData["cipherSuites"].(string); ok && cs != "" {
 		tlsData["cipherSuites"] = cs
 	}
+	if allowInsecure, ok := tlsClientSettings["allowInsecure"].(bool); ok && allowInsecure {
+		tlsData["allowInsecure"] = allowInsecure
+	}
 	putClientTLSVerification(tlsData, tlsClientSettings)
 	return tlsData
 }

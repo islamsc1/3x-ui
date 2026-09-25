@@ -38,6 +38,7 @@ exports[`inbound security forms > TlsForm field structure is stable 1`] = `
   "ECH config",
   "Pinned Peer Cert SHA-256",
   "Verify Peer Cert By Name",
+  "Allow Insecure TLS",
 ]
 `;
 
