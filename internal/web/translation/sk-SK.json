@@ -652,6 +652,8 @@
         "masterKeyLogTip": "Cesta na zápis hlavných kľúčov TLS vo formáte SSLKEYLOGFILE na ladenie cez Wireshark. V bežnej prevádzke ponechajte prázdne. Každý, kto má tento súbor, môže dešifrovať prevádzku.",
         "verifyPeerCertByName": "Overiť certifikát protistrany podľa názvu",
         "verifyPeerCertByNameTip": "Klienti budú overovať certifikát servera podľa tohto názvu namiesto SNI. Viac názvov oddeľte čiarkou. Nastavenie panelu sa pridáva do odkazov na pripojenie (vcn). Nahrádza allowInsecure, ktoré Xray odstránil po 2026-06-01.",
+        "allowInsecure": "Povoliť nezabezpečené TLS",
+        "allowInsecureTip": "Preskočiť overenie TLS certifikátu. Nezabezpečené pripojenia môžu byť zachytené — povoľte iba ak prijímate riziko.",
         "pinnedPeerCertSha256": "Pevne určený SHA-256 certifikátu",
         "pinnedPeerCertSha256Tip": "Odtlačky SHA-256 certifikátu protistrany v hexadecimálnom tvare (napr. e8e2d3…), oddelené čiarkami. Nezapisujú sa do serverovej konfigurácie Xray. Panel ich pridá do odkazov, aby klienti mohli overiť presný certifikát.",
         "pinnedPeerCertSha256Placeholder": "hexadecimálne odtlačky oddelené čiarkou",
