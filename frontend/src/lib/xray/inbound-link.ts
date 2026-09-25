@@ -178,6 +178,9 @@ function applyExternalProxyTLSObj(
   if (sni && sni.length > 0) obj.sni = sni;
   if (externalProxy.fingerprint && externalProxy.fingerprint.length > 0)
     obj.fp = externalProxy.fingerprint;
+  if (externalProxy.allowInsecure) {
+    obj.allowInsecure = externalProxy.allowInsecure;
+  }
   const alpn = externalProxyAlpn(externalProxy.alpn);
   if (alpn.length > 0) obj.alpn = alpn;
   const pins = externalProxyPins(externalProxy.pinnedPeerCertSha256);
@@ -281,6 +284,9 @@ export function genVmessLink(input: GenVmessLinkInput): string {
     const tlsSettings = stream.tlsSettings;
     if (tlsSettings.serverName.length > 0) obj.sni = tlsSettings.serverName;
     if (tlsSettings.settings.fingerprint.length > 0) obj.fp = tlsSettings.settings.fingerprint;
+    if (tlsSettings.settings.allowInsecure) {
+      obj.allowInsecure = tlsSettings.settings.allowInsecure;
+    }
     if (tlsSettings.alpn.length > 0) obj.alpn = tlsSettings.alpn.join(',');
     if (tlsSettings.settings.echConfigList.length > 0) obj.ech = tlsSettings.settings.echConfigList;
     if (tlsSettings.settings.verifyPeerCertByName.length > 0) {
@@ -337,6 +343,9 @@ function applyExternalProxyTLSParams(
   if (sni && sni.length > 0) params.set('sni', sni);
   if (externalProxy.fingerprint && externalProxy.fingerprint.length > 0)
     params.set('fp', externalProxy.fingerprint);
+  if (externalProxy.allowInsecure) {
+    params.set('allowInsecure', '1');
+  }
   const alpn = externalProxyAlpn(externalProxy.alpn);
   if (alpn.length > 0) params.set('alpn', alpn);
   const pins = externalProxyPins(externalProxy.pinnedPeerCertSha256);
@@ -439,6 +448,9 @@ export function genVlessLink(input: GenVlessLinkInput): string {
     params.set('security', 'tls');
     if (stream.security === 'tls') {
       const tls = stream.tlsSettings;
+      if (tls.settings.allowInsecure) {
+        params.set('allowInsecure', '1');
+      }
       if (tls.settings.fingerprint.length > 0) params.set('fp', tls.settings.fingerprint);
       params.set('alpn', tls.alpn.join(','));
       if (tls.serverName.length > 0) params.set('sni', tls.serverName);
@@ -545,6 +557,9 @@ function writeTlsParams(
 ): void {
   if (stream.security !== 'tls') return;
   const tls = stream.tlsSettings;
+  if (tls.settings.allowInsecure) {
+    params.set('allowInsecure', '1');
+  }
   if (tls.settings.fingerprint.length > 0) params.set('fp', tls.settings.fingerprint);
   params.set('alpn', tls.alpn.join(','));
   if (tls.settings.echConfigList.length > 0) params.set('ech', tls.settings.echConfigList);
@@ -770,9 +785,9 @@ function udpHopPorts(stream: NonNullable<Inbound['streamSettings']>): string {
 // finalmask.udp[type=salamander] when present; the broader finalmask payload
 // still rides under `fm` like the other links.
 //
-// Note: legacy genHysteriaLink reads stream.tls.settings.allowInsecure,
-// which isn't a field on TlsStreamSettings.Settings — the guard is always
-// false. We omit the `insecure` param here to stay byte-stable.
+// Note: allowInsecure now exists on TlsClientSettingsSchema (panel toggle,
+// restored by the fork), but hysteria links deliberately omit the `insecure`
+// param to stay byte-stable with the Go subscription output.
 export function genHysteriaLink(input: GenHysteriaLinkInput): string {
   const {
     inbound,

@@ -678,6 +678,8 @@
         "masterKeyLogTip": "Wireshark ile hata ayıklama için TLS ana anahtarlarının yazılacağı yol (SSLKEYLOGFILE biçimi). Üretimde boş bırakın — dosyaya erişimi olan herkesin trafiği çözmesine olanak tanır.",
         "verifyPeerCertByName": "Peer sertifikasını ada göre doğrula",
         "verifyPeerCertByNameTip": "İstemcilere sunucu sertifikasını SNI yerine bu ada göre doğrulamalarını söyler. Adları virgülle ayırın. Yalnızca panele özgü — paylaşım bağlantılarına eklenir (vcn). Xray'in 2026-06-01 sonrası kaldırdığı allowInsecure'un modern karşılığıdır.",
+        "allowInsecure": "Güvensiz TLS'ye İzin Ver",
+        "allowInsecureTip": "TLS sertifika doğrulamasını atlar. Güvensiz bağlantılar ele geçirilebilir — riski kabul ediyorsanız etkinleştirin.",
         "pinFromCert": "Bu gelen bağlantının sertifikasından doldur",
         "pinFromRemote": "SNI'ye ping atarak hash'i al (xray tls ping)",
         "pinFromRemoteNoSni": "Uzak sertifikaya ping atmak için önce SNI'yi (serverName) ayarlayın.",

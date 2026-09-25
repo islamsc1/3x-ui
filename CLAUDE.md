@@ -7,6 +7,12 @@ For a deep navigation map (request lifecycle, cron-job table, symptom → file
 index, layering rules), read `docs/architecture.md` on demand — do not guess
 file locations when it can answer in one hop.
 
+**This is a fork** (`islamsc1/3x-ui`, branch `with-allow-insecure`) carrying one
+feature patch upstream doesn't have. Before touching TLS/allowInsecure code, the
+update/install scripts, or porting to a new upstream version, read `FORK.md` —
+it is the step-by-step, must-follow procedure; this file alone is not enough for
+that work.
+
 ## Stack
 - Backend: Go 1.27 (`module github.com/mhsanaei/3x-ui/v3`), Gin, GORM.
   Runs Xray-core as a managed child process (`internal/xray/process.go`) and

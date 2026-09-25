@@ -416,6 +416,14 @@ export default function TlsForm({
       >
         <Input placeholder="example.com" />
       </FormField>
+      <FormField
+        name={['streamSettings', 'tlsSettings', 'settings', 'allowInsecure']}
+        label={t('pages.inbounds.form.allowInsecure')}
+        tooltip={t('pages.inbounds.form.allowInsecureTip')}
+        valueProp="checked"
+      >
+        <Switch />
+      </FormField>
     </>
   );
 }

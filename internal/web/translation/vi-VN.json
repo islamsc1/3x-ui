@@ -478,6 +478,8 @@
         "masterKeyLogTip": "Đường dẫn để ghi các khóa chính TLS (định dạng SSLKEYLOGFILE) phục vụ gỡ lỗi bằng Wireshark. Để trống khi chạy thực tế — vì ai có tệp này đều có thể giải mã lưu lượng.",
         "verifyPeerCertByName": "Xác minh chứng chỉ peer theo tên",
         "verifyPeerCertByNameTip": "Yêu cầu máy khách xác minh chứng chỉ máy chủ theo tên này thay vì theo SNI. Các tên cách nhau bằng dấu phẩy. Chỉ dùng trong bảng điều khiển — được đính kèm trong link chia sẻ (vcn). Đây là giải pháp thay thế hiện đại cho allowInsecure, vốn đã bị Xray gỡ bỏ sau 2026-06-01.",
+        "allowInsecure": "Cho phép TLS không an toàn",
+        "allowInsecureTip": "Bỏ qua xác minh chứng chỉ TLS. Kết nối không an toàn có thể bị đánh chặn — chỉ bật nếu bạn chấp nhận rủi ro.",
         "pinFromCert": "Điền từ chứng chỉ của inbound này",
         "pinFromRemote": "Lấy hash bằng cách ping SNI (xray tls ping)",
         "pinFromRemoteNoSni": "Hãy đặt SNI (serverName) trước để ping chứng chỉ từ xa.",
